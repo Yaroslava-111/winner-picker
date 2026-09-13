@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Честный розыгрыш — ПромоСтарт</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <div>
+        <div class="brand-name">ПромоСтарт</div>
+        <div class="brand-sub">честный генератор победителя</div>
+      </div>
+    </div>
+    <button id="btnVerifyLink" class="ghost-btn" hidden>Проверить результат</button>
+  </header>
+
+  <main class="container">
+    <section id="setupView" class="card setup-card">
+      <h1 class="setup-title">Разыграем приз?</h1>
+      <p class="setup-hint">Введи участников — получим случайный номер. Без повторов и без подвоха.</p>
+
+      <div class="tabs" role="tablist">
+        <button class="tab is-active" data-mode="range" role="tab">Диапазон</button>
+        <button class="tab" data-mode="count" role="tab">Количество</button>
+      </div>
+
+      <form id="setupForm" class="setup-form" novalidate>
+        <div id="rangeFields" class="field-group">
+          <label class="field">
+            <span>От номера</span>
+            <input type="number" id="fromInput" inputmode="numeric" min="1" placeholder="1">
+          </label>
+          <label class="field">
+            <span>До номера</span>
+            <input type="number" id="toInput" inputmode="numeric" min="1" placeholder="100">
+          </label>
+        </div>
+        <div id="countFields" class="field-group" hidden>
+          <label class="field">
+            <span>Сколько участников</span>
+            <input type="number" id="countInput" inputmode="numeric" min="1" max="1000000" placeholder="100">
+          </label>
+        </div>
+        <p id="formError" class="form-error" role="alert" hidden></p>
+        <button type="submit" class="primary-btn primary-btn--wide">Создать розыгрыш</button>
+      </form>
+    </section>
+
+    <section id="drawView" class="card draw-card" hidden>
+      <div class="draw-head">
+        <div>
+          <div class="draw-meta">Участники</div>
+          <div id="poolLabel" class="draw-meta-value">—</div>
+        </div>
+        <div class="draw-head-stats">
+          <div class="stat">
+            <div class="stat-value" id="poolLeft">0</div>
+            <div class="stat-label">осталось</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value" id="wonCount">0</div>
+            <div class="stat-label">выиграло</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="drum" class="drum">
+        <div id="drumNumber" class="drum-number">?</div>
+        <div id="drumMsg" class="drum-msg">Нажми «Разыграть приз»</div>
+      </div>
+
+      <div class="draw-actions">
+        <button id="btnDraw" class="primary-btn">Разыграть приз</button>
+        <button id="btnReset" class="ghost-btn">Новый розыгрыш</button>
+      </div>
+      <div class="draw-actions draw-actions--second">
+        <button id="btnChangePool" class="ghost-btn ghost-btn--full">Изменить участников</button>
+      </div>
+
+      <div id="resultBox" class="result-box" hidden>
+        <div class="result-title">Победитель #{<span id="lastWinner">—</span>}</div>
+        <div class="result-seed">
+          <span>Seed проверки</span>
+          <code id="seedText">—</code>
+          <button id="btnCopySeed" class="mini-btn" type="button">копировать</button>
+        </div>
+        <button id="btnCopyResult" class="secondary-btn">Скопировать текст результата</button>
+        <button id="btnVerifyNow" class="ghost-btn ghost-btn--full">Открыть страницу проверки</button>
+      </div>
+
+      <div id="historyBox" class="history" hidden>
+        <div class="history-title">Выпавшие номера</div>
+        <div id="historyList" class="history-list"></div>
+      </div>
+    </section>
+
+    <footer class="app-footer">Работает локально в браузере. Данные никуда не отправляются.</footer>
+  </main>
+
+  <div id="verifyModal" class="modal" hidden>
+    <div class="modal-backdrop"></div>
+    <div class="modal-card">
+      <button id="btnCloseVerify" class="modal-close" type="button" aria-label="Закрыть">×</button>
+      <h2 class="modal-title">Проверка результата</h2>
+      <p class="setup-hint">Вставь seed и номера победителей — пересчитаем всё независимо.</p>
+      <form id="verifyForm" class="verify-form" novalidate>
+        <label class="field">
+          <span>Seed</span>
+          <input type="text" id="verifySeed" autocomplete="off" spellcheck="false">
+        </label>
+        <div class="field-group">
+          <label class="field">
+            <span>От номера</span>
+            <input type="number" id="verifyFrom" inputmode="numeric" min="1" value="1">
+          </label>
+          <label class="field">
+            <span>До номера</span>
+            <input type="number" id="verifyTo" inputmode="numeric" min="1">
+          </label>
+        </div>
+        <label class="field">
+          <span>Победители (через запятую)</span>
+          <input type="text" id="verifyWinners" autocomplete="off" spellcheck="false" placeholder="42, 17, 9">
+        </label>
+        <button type="submit" class="primary-btn primary-btn--wide">Проверить</button>
+      </form>
+      <div id="verifyResult" class="verify-result" hidden></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
